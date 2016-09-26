@@ -1,0 +1,173 @@
+#include <iostream>
+#define MAX 20
+using namespace std;
+
+class vector{
+private:
+	int *items;
+	int size;
+	int max;
+
+	void expand();
+
+public:
+	vector();
+	vector(int);
+	int getSize();
+    void resetSize();
+	int at(int);
+	bool insert(int,int);
+    bool remove(int);
+    int operator[](int);
+    friend ostream& operator<<(ostream&,vector);
+};
+vector::vector(){
+    items = new int[5];
+	size = 0;
+	max = 5;
+}
+vector::vector(int n){
+    items = new int[5];
+	size = 0;
+	max = 5;
+	for(int i=0; i<max; i++){
+		items[i] = n;
+        size++;
+    }
+}
+ostream& operator<<(ostream& out,vector arr){
+    int j;
+    for(j=0;j<arr.size;j++){
+        out<<arr[j]<<" ";
+    }
+    out<<endl;
+    return out;
+}
+void vector::expand(){
+    int *cpy = new int[max];
+
+    for(int i = 0; i < size; i++){
+        cpy[i] = items[i];
+    }
+
+    max+=5;
+    delete[]items;
+    items = new int[max];
+
+    for(int i = 0; i < size; i++){
+        items[i] = cpy[i];
+    }
+
+    delete[]cpy;
+}
+bool vector::insert(int n, int i){
+    if(i<0 || i>size){
+        cout<<" false";
+        return false;
+    }
+    else{
+        if(i>=size){
+            items[i]=n;
+            size++;
+        }
+        else if(size == max){
+            expand();
+        }
+        else{
+            for(int j=size-1;j>i;j--){
+                items[j+1]=items[j];
+            }
+            items[i]=n;
+            size++;
+        }
+    }
+    return true;
+}
+void vector::resetSize(){
+	size = 0;
+}
+int vector::operator[](int i){
+	return items[i];
+}
+bool vector::remove(int i){
+    if(i<0 || i>=size|| size==0){
+        return false;
+    }
+    else{
+        if(i==size-1){
+            size--;
+        }
+        else{
+            for(int j=i;j<size;j++){
+                items[j]=items[j+1];
+            }
+            size-=1;
+        }
+    }
+    return true;
+}
+int vector::getSize(){
+	return size;
+}
+int vector::at(int i){
+	return items[i];
+}
+void purge(vector*);
+void display(vector);
+void checker(vector);
+
+int main() {
+    int tcase,i,x,j;
+    vector arr;
+    cin>>tcase;
+    for(i=0;i<tcase;i++){
+        for(j=0;j<10;j++){
+            cin>>x;
+            arr.insert(x,j);
+        }
+        purge(&arr);
+        checker(arr);
+        cout<<arr;
+        arr.resetSize();
+    }
+    return 0;
+}
+void checker(vector arr){
+    int j,count=1;
+    if(arr.getSize()==1){
+        cout<<"NO"<<endl;
+        return;
+    }
+    for(j=0;j<arr.getSize()-1;j++){
+        if(arr[j]==arr[j+1]){
+            count++;
+        }
+        else if(arr[j]>arr[j+1]){
+            cout<<"NO"<<endl;
+            return;
+        }
+    }
+    if(count==arr.getSize()){
+        cout<<"NO"<<endl;
+        return;
+    }
+    cout<<"YES"<<endl;
+}
+void display(vector arr){
+    int j;
+    for(j=0;j<arr.getSize();j++){
+        cout<<arr[j]<<" ";
+    }
+    cout<<endl;
+}
+void purge(vector *arr){
+   int i,j;
+   for(i=0;i<arr->getSize();i++){
+     for(j=i+1;j<arr->getSize();j++){
+         if((*arr)[i]==(*arr)[j]){
+           arr->remove(j);
+            j--;
+         }
+     }
+   }
+}
