@@ -1,4 +1,8 @@
-
+/*
+*
+*Solution by Michael Pacana (MEPacana)
+*
+*/
 class array{
 private:
 	int items[MAX];
