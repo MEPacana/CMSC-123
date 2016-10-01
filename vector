@@ -1,3 +1,10 @@
+/*
+*
+*Solution by Michael Pacana (MEPacana)
+*
+*/
+
+
 #include <iostream>
 #define MAX 20
 using namespace std;
