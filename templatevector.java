@@ -1,8 +1,8 @@
 #include <iostream>
 #define MAX 20
 using namespace std;
-template <class T>
 
+template <class T>
 class vector{
 private:
 	T *items;
@@ -13,14 +13,14 @@ private:
 
 public:
 	vector();
-    vector(const vector&);
+	vector(const vector&);
 	~vector();
 	int getSize();
-    void resetSize();
+	void resetSize();
 	T at(int);
 	bool insert(T,int);
-    bool remove(int);
-    T operator[](int);
+	bool remove(int);
+	T operator[](int);
 };
 
 template <class T>
@@ -28,13 +28,12 @@ vector<T>::vector(const vector<T>& v){
 	size = v.size;
 	max = v.max;
 	items = new T [max];
-
 	copy(v.items,v.items+size,items);
 }
 
 template <class T>
 vector<T>::vector(){
-    items = new T[5];
+	items = new T[5];
 	size = 0;
 	max = 5;
 }
@@ -47,9 +46,11 @@ vector<T>::~vector(){
 template <class T>
 ostream& operator<<(ostream& out,vector <T> arr){
     int j;
-    for(j=0;j<arr.getSize();j++){
+    
+    for(j = 0 ; j < arr.getSize() ; j++){
         out<<arr[j]<<" ";
     }
+    
     out<<endl;
     return out;
 }
@@ -65,17 +66,16 @@ void vector<T>::expand(){
     max+=5;
     delete[]items;
     items = new T[max];
-
+  
     for(int i = 0; i < size; i++){
         items[i] = cpy[i];
     }
-
     delete[]cpy;
 }
 
 template <class T>
 bool vector<T>::insert(T n, int i){
-    if(i<0 || i>size){
+    if(i < 0 || i > size){
         return false;
     }
     else{
@@ -87,8 +87,8 @@ bool vector<T>::insert(T n, int i){
             size++;
         }
         else{
-            for(int j=size;j>i;j--){
-                items[j]=items[j-1];
+            for(int j = size ; j > i ; j--){
+                items[j] = items[j-1];
             }
             items[i]=n;
             size++;
