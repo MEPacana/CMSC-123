@@ -1,6 +1,10 @@
+/*
+ *Solution by Michael Pacana
+ */
 #include <iostream>
 using namespace std;
 template <class T>
+
 class node{
 public:
     T elem;
@@ -20,10 +24,11 @@ public:
     list& operator=(const list&);
     bool insert(int, T);
     T get(int);
+    void display();
 };
 
 template <class T>
-void display(list<T>);
+void display(list <T>);
 
 template <class T>
 list<T>::list(){
@@ -32,11 +37,13 @@ list<T>::list(){
 }
 
 template <class T>
-list<T>::list(const list<T>& l){
+list<T>::list(const list<T>&l){
     size = 0;
     head = tail = NULL;
     node<T> *temp = l.head;
-    for(int i = 0; insert(i,temp->elem); i++, temp = temp->next);
+    for(int i = 0; i < l.size ; i++, temp = temp->next){
+        insert(i,temp->elem);
+    }
 }
 
 template <class T>
@@ -55,11 +62,9 @@ bool list<T>::insert(int i, T n){
     else if(i == 0){
         x->next = head;
         head = x;
-        cout<<"tomato"<<endl;
     }
     else {
         node<T> *temp = head;
-        cout<<"tomato2"<<endl;
         for(int j = 0; j < i-1; j++){
                 temp = temp->next;
             }
@@ -76,8 +81,15 @@ T list<T>::get(int n){
     for(int i = 0; i < n; i++, temp = temp->next);
     return temp->elem;
 }
+
+
 template <class T>
-void display(list<T>);
+void display(list <T>l){
+for(int i = 0; i < l.size; i++){
+        cout<<l.get(i)<<"\n";
+    }
+    cout<<endl;
+}
 
 int main(){
     list<int> List;
@@ -85,23 +97,10 @@ int main(){
     cin>>tst;
     while(tst>0){
         cin>>pos;
-        cout<<"potato";
         cin>>item;
-        cout<<"potato1";
         List.insert(pos, item);
-        cout<<"potato2";
         display(List);
-        cout<<"potato";
         tst--;
     }
-    return 0;
+    return  0;
 }
-
-template <class T>
-void display(list<T> l){
-    for(int i = 0; i < l.size; i++){
-        cout<<l.get(i)<<" ";
-    }
-    cout<<endl;
-}
-
