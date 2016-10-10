@@ -1,0 +1,194 @@
+/*
+ *Solution by Michael Pacana
+ */
+#include <iostream>
+using namespace std;
+template <class T>
+
+class node{
+public:
+    T elem;
+    node* next;
+    node();
+    node(T n){elem = n; next = NULL;}
+};
+
+template <class T>
+class list{
+public:
+    int size;
+    node<T> *head,*tail;
+public:
+    list();
+    ~list();
+    list(const list&);
+    list& operator=(const list&);
+    bool insert(int, T);
+    T get(int);
+    bool set(T ,int);
+    void display();
+    bool remove(int);
+    
+};
+
+template <class T>
+void display(list <T>);
+
+template <class T>
+list<T>::list(){
+    size = 0;
+    head = tail = NULL;
+}
+
+template <class T>
+list<T>::list(const list<T>&l){
+    size = 0;
+    head = tail = NULL;
+    node<T> *temp = l.head;
+    for(int i = 0; i < l.size ; i++, temp = temp->next){
+        insert(i,temp->elem);
+    }
+}
+
+template <class T>
+bool list<T>::insert(int i, T n){
+    if(i<0 || i>size){
+        return false;
+    }
+    node<T> *x = new node<T>(n);
+    if(size == 0){
+        tail = head = x;
+    }
+    else if(i==size){
+        tail->next = x;
+        tail = x;
+    }
+    else if(i == 0){
+        x->next = head;
+        head = x;
+    }
+    else {
+        node<T> *temp = head;
+        for(int j = 0; j < i-1; j++){
+           temp = temp->next;
+        }
+        x->next = temp->next;
+        temp->next = x;
+    }
+    size++;
+    return true;
+}
+
+template <class T>
+T list<T>::get(int n){
+    if(n<0 || n>=size){
+        throw 69;
+    }
+    else{
+        node<T> *temp = head;
+        for(int i = 0; i < n; i++, temp = temp->next);
+        return temp->elem;
+    }
+}
+
+template <class T>
+bool list<T>::set(T n,int pos){
+    if(pos<0 || pos>=size){
+        return false;
+    }
+    else{
+        node<T> *temp = head;
+        for(int pos2 = 0; pos2 < pos; pos2++){
+            temp = temp->next;
+        }
+        temp->elem = n;
+    }
+    return true;
+}
+
+template <class T>
+list<T>::~list(){
+	node<T> *temp = head;
+
+    while(head != NULL){
+        remove(size-1);//size is the thing after, 
+    }
+}
+
+template <class T>
+bool list<T>::remove(int pos){
+    if(pos<0 || pos>=size){
+        return false;
+    }
+    else if(size==0){
+        return false;
+    }
+    else{
+        node<T> *temp = head;
+        if(pos==0){
+            head = head->next;
+            delete temp;
+        }
+        else{
+            for(int pos2 = 0; pos2 < pos-1; pos2++){
+                temp = temp->next;
+            }
+            if(pos == size - 1){
+                delete tail;
+                tail = temp;
+                tail->next = NULL;//always set tail to null
+            }
+            else{
+                node<T> *temp2 = temp->next;
+                temp->next = temp2->next;
+                delete temp2;
+            }
+        }
+    }
+    size--;
+    return true;
+}
+
+
+template <class T>
+void display(list <T>l){
+   for(int i = 0; i < l.size; i++){
+      cout<<l.get(i)<<" ";
+   }
+   cout<<endl;
+}
+
+int main(){
+    list<int> List;
+    int tst, choice, pos, item;
+    cin>>tst;
+    while(tst>0){
+        cin>>choice;
+        cin>>pos;
+        if(choice==1){
+            cin>>item;
+            List.insert(pos, item);
+            display(List);
+        }
+        else if(choice==2){
+            List.remove(pos);
+            display(List);
+        }
+        else if(choice==3){
+            int item2;
+            try{
+                item2 = List.get(pos);
+                cout<<item2<<endl;
+            }
+            catch(int err){
+                if(err == 69)
+                    cout<<"POSITION OUT OF BOUNDS"<<endl;
+            }
+        }
+        else{
+            cout<<"invalid input"<<endl;
+        }
+        tst--;
+    }
+    return  0;
+}
