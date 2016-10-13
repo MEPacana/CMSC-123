@@ -1,0 +1,267 @@
+/*
+ *Solution by Michael Pacana
+ */
+#include <iostream>
+using namespace std;
+
+template <class T>
+class node{
+public:
+    T elem;
+    node *next, *prev;
+    node();
+    node(T n){elem = n; next = prev = NULL;}
+};
+
+template <class T>
+class list{
+public:
+    struct iterator{
+        node<T>* pointer;
+        iterator& operator++(int){pointer = pointer->next; return (*this);}
+        T operator*(){return pointer->elem;}
+        bool operator!=(const iterator& it){return pointer!=it.pointer;}
+    };
+private:
+    int size;
+    node<T> *head,*tail;
+    iterator iter;
+public:
+    list();
+    ~list();
+    list(const list&);
+    list& operator=(const list&);
+    bool insert(int, T);
+    T get(int);
+    bool set(T ,int);
+    int getSize(){return size;}
+    bool remove(int);
+    iterator begin(){iter.pointer = head; return iter;}
+    iterator end(){iter.pointer = tail->next; return iter;}
+
+};
+
+template <class T>
+void display(list <T>);
+
+template <class T>
+list<T>::list(){
+    size = 0;
+    head = tail = NULL;
+}
+
+template <class T>
+list<T>::list(const list<T>&l){
+    size = 0;
+    head = tail = NULL;
+    node<T> *temp = l.head;
+    for(int i = 0; i < l.size ; i++, temp = temp->next){
+        insert(i,temp->elem);
+    }
+}
+
+template <class T>
+bool list<T>::insert(int i, T n){
+    if(i<0 || i>size){
+        return false;
+    }
+    
+    node<T> *x = new node<T>(n);
+    if(size == 0){
+        tail = head = x;
+    }
+    else if(i==size){
+        x->prev = tail;
+        tail->next = x;
+        tail = x;
+    }
+    else if(i == 0){
+        x->next = head;
+        head->prev = x;
+        head = x;
+    }
+    else {
+        if(i <= size/2){
+            node<T> *temp = head;
+            for(int j = 0; j < i-1; j++){
+               temp = temp->next;
+            }
+            x->next = temp->next;
+            x->prev = temp;
+            temp->next = x;
+            temp = x->next;
+            temp->prev = x;
+        }
+        else{
+            node<T> *temp = tail;
+            for(int j = size - 1; j > i+1; j--){
+                temp = temp->prev;
+            }
+            x->prev = temp->prev;
+            x->next = temp;
+            temp->prev = x;
+            temp = x->prev;
+            temp->next = x;
+        }
+    }
+    size++;
+    return true;
+}
+
+template <class T>
+T list<T>::get(int n){
+    if(n<0 || n>=size){
+        throw 69;
+    }
+    else{
+        if(n < size/2){
+            node<T> *temp = head;
+            for(int i = 0; i < n; i++, temp = temp->next);
+            return temp->elem;
+        }
+        else{
+            node<T> *temp = tail;
+            for(int i = size-1; i > n; i--, temp = temp->prev);
+            return temp->elem;
+        }
+    }
+}
+
+template <class T>
+bool list<T>::set(T n,int pos){
+    if(pos<0 || pos>=size){
+        return false;
+    }
+    else{
+        if(pos < size/2){
+            node<T> *temp = head;
+            for(int pos2 = 0; pos2 < pos; pos2++){
+                temp = temp->next;
+            }
+            temp->elem = n;
+        }
+        else {
+            node<T> *temp = tail;
+            for(int pos2 = size-1; pos2 > pos; pos2--){
+                temp = temp->prev;
+            }
+            temp->elem = n;
+        }
+    }
+    return true;
+}
+
+template <class T>
+list<T>::~list(){
+	node<T> *temp = head;
+
+    while(size > 0){
+        remove(0);//size is the thing after,
+    }
+}
+
+template <class T>
+bool list<T>::remove(int pos){
+    if(pos<0 || pos>=size){
+        return false;
+    }
+    else if(size==0){
+        return false;
+    }
+    else{
+        node<T> *temp = head;
+        if(pos==0){
+            head = head->next;
+            if(head != NULL)
+                head->prev = NULL;
+            delete temp;
+        }
+        else{
+            if(pos < size/2){
+                for(int pos2 = 0; pos2 < pos-1; pos2++){
+                    temp = temp->next;
+                }
+                node<T> *temp2 = temp->next;
+                temp->next = temp2->next;
+                temp = temp2->next;
+                temp->prev = temp2->prev;
+                temp2->prev = temp2->next = NULL;
+                delete temp2;
+            }
+            else {
+                temp = tail;
+                if (pos == size - 1){
+                    tail = tail->prev;
+                    tail->next = NULL;
+                    temp->next = temp->prev = NULL;
+                    delete temp;
+                }
+                else{
+                    for(int pos2 = size-1; pos2 > pos+1; pos2--){
+                        temp = temp->prev;
+                    }
+                    node<T> *temp2 = temp->prev;
+                    temp->prev = temp2->prev;
+                    temp = temp2->prev;
+                    temp->next = temp2->next;
+                    temp2->next = temp2->prev = NULL;
+                }
+            }
+        }
+    }
+    size--;
+    return true;
+}
+
+
+template <class T>
+void display(list <T>l){
+    typename list<T>::iterator it;
+    if(l.getSize() > 0){
+        for(it = l.begin(); it!=l.end(); it++){
+            cout<<*it<<" ";
+        }
+    }
+    cout<<endl;
+}
+
+int main(){
+    list<int> List;
+    int tst, choice, pos, item;
+    cin>>tst;
+    while(tst>0){
+        cin>>choice;
+        cin>>pos;
+        //cout<<"TEST: "<<tst<< " - ";
+        if(choice==1){
+            cin>>item;
+            List.insert(pos, item);
+            display(List);
+        }
+        else if(choice==2){
+            List.remove(pos);
+            display(List);
+        }
+        else if(choice==3){
+            int item2;
+            try{
+                item2 = List.get(pos);
+                cout<<item2<<endl;
+            }
+            catch(int err){
+                if(err == 69)
+                    cout<<"POSITION OUT OF BOUNDS"<<endl;
+            }
+        }
+        else if (choice == 4){
+            cin>>item;
+            List.set(item, pos);
+            display(List);
+        }
+        else{
+            cout<<"invalid input"<<endl;
+        }
+        tst--;
+    }
+    return  0;
+}
