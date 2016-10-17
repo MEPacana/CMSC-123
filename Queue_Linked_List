@@ -1,0 +1,145 @@
+/*
+ *Solution by Michael Pacana
+ */
+#include <iostream>
+using namespace std;
+template <class T>
+
+class node{
+public:
+    T elem;
+    node* next;
+    node();
+    node(T n){elem = n; next = NULL;}
+};
+
+template <class T>
+class list{
+public:
+    int size;
+    node<T> *head,*tail;
+public:
+    list();
+    ~list();
+    list(const list&);
+    list& operator=(const list&);
+    bool enqueue(T);
+    void display();
+    bool dequeue(); 
+    void front();
+    void rear();
+
+};
+
+template <class T>
+void list<T>::front(){
+    if(size == 0){
+        cout<<"queue is empty."<<endl;
+    }
+    else{
+        cout<<head->elem<<endl;
+    }
+}
+    
+template <class T>
+void list<T>::rear(){
+    if(size == 0){
+        cout<<"queue is empty."<<endl;
+    }
+    else{
+        cout<<tail->elem<<endl;
+    }
+}
+template <class T>
+list<T>::list(){
+    size = 0;
+    head = tail = NULL;
+}
+
+template <class T>
+list<T>::list(const list<T>&l){
+    size = 0;
+    head = tail = NULL;
+    node<T> *temp = l.head;
+    for( int i = 0; i < l.size ;i++, temp = temp->next){
+        enqueue(temp->elem);
+    }
+}
+
+template <class T>
+bool list<T>::enqueue(T n){
+    node<T> *x = new node<T>(n);
+    
+    if(size == 0){
+        tail = head = x;
+    }
+    else {
+        tail->next = x;
+        tail = x;
+    }
+    size++;
+    return true;
+}
+
+template <class T>
+list<T>::~list(){
+    while(size > 0){
+        dequeue();
+    }
+}
+
+template <class T>
+bool list<T>::dequeue(){
+    if(size==0){
+        return false;
+    }
+    else{
+        node<T> *temp = head;
+        head = head->next;
+        temp->next = NULL;
+        delete temp;
+    }
+    size--;
+    return true;
+}
+
+
+template <class T>
+void list<T>::display(){
+    node<T> *temp = head;
+    for(int i = 0; i < size; i++, temp = temp->next){
+        cout << temp->elem << " ";
+    }
+    cout<<endl;
+}
+
+int main(){
+    list<int> l;
+    int tst, choice, pos, item;
+    cin>>tst;
+    //cout<<"testcase"<<tst<<endl;
+    while(tst>0){
+        cin>>choice;
+        //cout<<"choice"<<choice<<endl;
+        if(choice==1){
+            cin>>item;
+            l.enqueue(item);
+            l.display();
+        }
+        else if(choice==2){
+            l.dequeue();
+            l.display();
+        }
+        else if(choice==3){
+            l.front();
+        }
+        else if(choice==4){
+            l.rear();
+        }
+        else{
+            l.display();
+        }
+        tst--;
+    }
+    return  0;
+}
