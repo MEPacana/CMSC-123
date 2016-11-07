@@ -1,0 +1,119 @@
+#include <iostream>
+using namespace std;
+
+template<class T>
+class node{
+public:
+    T item;
+    node *prnt;
+    node *right;
+    node *left;
+    node(){
+        left = right =
+        prnt = NULL;
+    }
+    node(int n){
+        item = n;
+        left = right = prnt = NULL;
+    }
+};
+
+template<class T>
+class tree{
+public:
+    node<T> *root;
+public:
+    tree(){root = NULL;}
+    tree(node<T> *n){
+        root = n;
+    }
+
+
+    void add(T);
+    int search(T);
+};
+
+int main(){
+    int cases, ins, insNum, srch, srchCt;
+
+    cin>>cases;
+
+    while (cases){
+        tree<int> t;
+        cin>>ins;
+        while(ins){
+            cin>>insNum;
+            t.add(insNum);
+            ins--;
+        }
+        cin>>srch;
+        srchCt = t.search(srch);
+        if(srchCt < 0){
+            cout<<0-srchCt<<" !FOUND"<<endl;
+        } else{
+            cout<<srchCt<<" FOUND" <<endl;
+        }
+
+        cases--;
+    }
+}
+
+template<class T>
+void tree<T>::add(T num){
+
+    node<T> *n;
+    n = new node<T>();
+
+    n->item = num;
+
+    node<T> *i;
+    i = root;
+
+    if(root == NULL){
+        root = n;
+    }
+    else {
+        while(i!=NULL){
+            if(n -> item < i -> item){
+                if (i -> left == NULL){
+                    i->left = n;
+                    n->prnt = i;
+                    break;
+                }
+                else{
+                    i=i->left;
+                }
+            } else {
+                if (i -> right == NULL){
+                    i->right = n;
+                    n->prnt = i;
+                    break;
+                }
+                else{
+                    i = i->right;
+                }
+            }
+        }
+    }
+}
+
+template<class T>
+int tree<T>::search(T srch){
+    node<T> *i;
+    i = root;
+    int ct = 1;
+
+    while(i != NULL){
+        if(srch == i -> item){
+            return ct;
+        }
+        else if(srch < i -> item){
+            i = i->left;
+        } else {
+            i = i->right;
+        }
+        ct++;
+    }
+    ct--;
+    return 0 - ct;
+}
