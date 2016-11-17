@@ -1,0 +1,168 @@
+#include <iostream>
+#define MAX 20
+using namespace std;
+
+template <class T>
+class heap{
+private:
+	T *items;
+	int size;
+	int max;
+
+	void expand();
+public:
+	heap();
+	heap(int);
+	heap(const heap&);
+	~heap();
+	void display();
+	int getSize();
+	void resetSize();
+	bool insert(T);
+	bool remove(int);
+	T operator[](int);
+};
+
+template <class T>
+heap<T>::heap(const heap<T>& v){//check
+	size = v.size;
+	max = v.max;
+	items = new T [max];
+	copy(v.items,v.items+size,items);
+}
+
+template <class T>
+heap<T>::heap(){
+    max = 5;
+	items = new T[max+1];
+	size = 0;
+}
+
+template <class T>
+heap<T>::heap(int max){
+    this->max =max;
+	items = new T[max+1];
+	size = 0;
+}
+
+
+template <class T>
+heap<T>::~heap(){
+	delete[] items;
+}
+
+template <class T>
+ostream& operator<<(ostream& out,heap <T> arr){
+    int j;
+
+    for(j = 0 ; j < arr.getSize() ; j++){
+        out<<arr[j]<<" ";
+    }
+
+    out<<endl;
+    return out;
+}
+
+template <class T>
+void heap<T>::expand(){
+    T *cpy = new T[max];
+
+    for(int i = 0; i < size; i++){
+        cpy[i] = items[i];
+    }
+
+    max+=5;
+    delete[]items;
+    items = new T[max];
+
+    for(int i = 0; i < size; i++){
+        items[i] = cpy[i];
+    }
+    delete[]cpy;
+}
+
+template <class T>
+bool heap<T>::insert(T n){
+        size++;
+        int tempsize = size;
+        while((tempsize)>=1){
+            if(tempsize == 1){
+                items[tempsize] = n;
+            }
+            else if(n < items[(tempsize)/2]){
+                    items[tempsize] = items[(tempsize)/2];
+            }
+            else{
+                items[tempsize] = n;
+                break;
+            }
+            tempsize= (tempsize) / 2;
+        }
+    for(int i=1;i<size+1;i++){
+        cout<<items[i]<<" ";
+    }
+    cout<<endl;
+    return true;
+}
+
+template <class T>
+void heap<T>::resetSize(){
+	size = 0;
+}
+
+template <class T>
+T heap<T>::operator[](int i){
+	return items[i];
+}
+
+template <class T>
+bool heap<T>::remove(int i){
+    if(i<0 || i>=size|| size==0){
+        return false;
+    }
+    else{
+        if(i==size-1){
+            size--;
+        }
+        else{
+            for(int j=i;j<size;j++){
+                items[j]=items[j+1];
+            }
+            size-=1;
+        }
+    }
+    return true;
+}
+
+template <class T>
+int heap<T>::getSize(){
+	return size;
+}
+
+
+template <class T>
+void display(heap <T>);
+
+int main() {
+    int tcase,itemloop,item;
+    cin>>tcase;
+    while(tcase){
+        cin>>itemloop;
+        heap<int> arr(itemloop);
+        while(itemloop){
+            cin>>item;
+            arr.insert(item);
+            itemloop--;
+        }
+        tcase--;
+    }
+    return 0;
+}
+template <class T>
+void heap<T>::display(){
+    int j;
+    for(j=1;j<=size;j++){
+        cout<<items[j]<<" ";
+    }
+    cout<<endl;
+}
