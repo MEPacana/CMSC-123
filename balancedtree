@@ -1,0 +1,287 @@
+#include <iostream>
+using namespace std;
+template <class T>
+class node {
+public:
+	T item;
+	int children;
+	node<T> *left, *right, *prnt;
+	int lr; //-1 for left leaning, 1 for rightleaning, 0 for balanced
+	int lrChild; // -1 if isLeftChild
+	int hL, hR;
+	node();
+	node(T);
+};
+template <class T>
+class tree {
+private:
+	int size;
+	node<T>* addItem(node<T>*, T);
+	int search(node<T>*, T);
+	void display(node<T>*);
+public:
+	node<T> *root;
+	int count;
+	tree();
+	~tree();
+	tree(node<T>*);
+	int getSize() { return size; }
+	void insert(T);
+	node<T>* insert(node<T>*, T);
+	int search(T);
+	int remove(T);
+	int remove(node<T>*, T);
+	void display();
+};
+template <class T>
+node<T>::node() {
+	left = right = prnt = NULL;
+	lr = hL = hR = 0;
+}
+template <class T>
+node<T>::node(T in) {
+	item = in;
+	left = right = prnt = lr = hL = hR = NULL;
+}
+template <class T>
+void tree<T>::display() {
+	display(root);
+}
+template <class T>
+tree<T>::~tree() {
+	while (size > 0) {
+		remove(root->item);
+	}
+}
+template <class T>
+tree<T>::tree() {
+	size = count = 0;
+	root = NULL;
+}
+template <class T>
+void tree<T>::insert(T a) {
+	root = insert(root, a);
+}
+template <class T>
+node<T>* tree<T>::insert(node<T>* n, T in) {
+	if (n == NULL) {
+		node<T>*  b = new node<T>();
+		b->prnt = n;
+		b->item = in;
+		b->left = b->right = NULL;
+		size++;
+		return b;
+	}
+	else if (n->item<in) {
+        //n->hR++;
+		n->right = insert(n->right, in);
+		n->right->prnt = n;
+	}
+	else if (n->item>in) {
+	    //n->hL++;
+		n->left = insert(n->left, in);
+		n->left->prnt = n;
+	}
+//	if(n->hR > n->hL){
+//        n->lr += 1;
+//	} else if (n->hL > n->hR) {
+//        n->lr -= 1;
+//	}
+//if(n->lr > 0 && n->right->lr > 0){
+//        node<T>* a = n->right;
+//        if(n->prnt != NULL){
+//            if(n->prnt->left == n){
+//                n->prnt->left = a;
+//            }
+//            else{
+//                n->prnt->right = a;
+//            }
+//        }
+//        a->prnt = n->prnt;
+//        n->prnt = a;
+//        a->left = n;
+//    }
+//    else if(n->lr < 0 && n->left->lr < 0){
+//        node<T>* a = n->left;
+//        if(n->prnt != NULL){
+//            if(n->prnt->right == n){
+//                n->prnt->right = a;
+//            }
+//            else{
+//                n->prnt->left = a;
+//            }
+//        }
+//        a->prnt = n->prnt;
+//        n->prnt = a;
+//        a->right = n;
+//    }
+//    else if(n->lr > 0 && n->right->lr < 0){
+//        node<T>* a = n->right;
+//        if(n->prnt != NULL){
+//            if(n->prnt->right == n){
+//                n->prnt->right = a;
+//            }
+//            else{
+//                n->prnt->left = a;
+//            }
+//        }
+//        a->right = a->left;
+//        a->left = n;
+//        n->prnt = a;
+//    }
+//    else if(n->lr < 0 && n->left->lr > 0){
+//        node<T>* a = n->left;
+//        if(n->prnt != NULL){
+//            if(n->prnt->right == n){
+//                n->prnt->right = a;
+//            }
+//            else{
+//                n->prnt->left = a;
+//            }
+//        }
+//        a->left = a->right;
+//        a->right = n;
+//        n->prnt = a;
+//    }
+	return n;
+}
+template <class T>
+int tree<T>::remove(T in) {
+	int i = remove(root, in);
+	size--;
+	return i;
+}
+template <class T>
+int tree<T>::remove(node<T>* a, T in) {
+	if (a == NULL)
+		return count*-2;
+	else if (a->item == in) {
+		if (a->left == NULL && a->right == NULL) {
+            if(a == root){
+                delete a;
+                root = NULL;
+            } else {
+                node<T>* b = a;
+                if(a == b->left){
+                    delete a;
+                    b->left = NULL;
+                } else {
+                    delete a;
+                    b->right = NULL;
+                }
+            }
+			return 1;
+		}
+		else if (a->left == NULL && a->right != NULL) {
+			if(a == root){
+				root = a->right;
+				delete a;
+			} else{
+				node<T>* temp = a->prnt;
+				if (temp->left == a) {
+					temp->left = a->right;
+					a->right = NULL;
+					delete a;
+				}
+				else {
+					temp->right = a->right;
+					a->right = NULL;
+					delete a;
+				}
+			}
+			return 1;
+		}
+		else if (a->right == NULL && a->left != NULL) {
+			if(a == root){
+				root = a->left;
+				delete a;
+			} else {
+				node<T>* temp = a->prnt;
+				if (temp == NULL) {
+				}
+				else if (temp->right == a) {
+					temp->right = a->left;
+					a->left = NULL;
+					delete a;
+				}
+				else {
+					temp->left = a->left;
+					a->left = NULL;
+					delete a;
+				}
+			}
+			return 1;
+		}
+		else {
+			node<T>* parent = a->prnt;
+			node<T>* temp;
+			temp = a->right;
+			while (temp->left != NULL) {
+				temp = temp->left;
+			}
+			T it = temp->item;
+			int idgaf = remove(temp->item);
+			a->item = it;
+			return 1;
+		}
+	}
+	else if (a->item<in) {
+		count++;
+		return 1 + remove(a->right, in);
+	}
+	else if (a->item>in) {
+		count++;
+		return 1 + remove(a->left, in);
+	}
+	return 0;
+}
+template <class T>
+void tree<T>::display(node<T>* a) {
+	if (a != NULL) {
+		display(a->left);
+		cout << a->item << " ";
+		display(a->right);
+	}
+}
+template <class T>
+int tree<T>::search(T a) {
+	return search(root, a);
+}
+template <class T>
+int tree<T>::search(node<T>* a, T in) {
+	if (a == NULL)
+		return size;
+	else if (a->item == in) {
+		return 1;
+	}
+	else if (a->item<in) {
+		return 1 + search(a->right, in);
+	}
+	else if (a->item>in) {
+		return 1 + search(a->left, in);
+	}
+	return 0;
+}
+int main() {
+	int x = 0, i = 0, n = 0, in = 0, found = 0;
+	cin >> i;
+	while (i>0) {
+		tree<int> tr;
+		cin >> n;
+		while (n>0) {
+			cin >> in;
+			tr.insert(in);
+			n--;
+		}
+		cin >> x;
+		found = tr.remove(x);
+		if (found > 0) {
+			cout << found << " DELETED " << tr.root->item << endl;
+		}
+		else {
+			cout << found*-1 << " !FOUND" << endl;
+		}
+		i--;
+	}
+	return 0;
+}
