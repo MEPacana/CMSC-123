@@ -1,0 +1,142 @@
+#include <iostream>
+
+using namespace std;
+
+template <class T>
+class btnode{
+public:
+    T item;
+    btnode<T> *left;
+    btnode<T> *right;
+    btnode<T> *parent;
+    btnode();
+    btnode(T);
+};
+
+template <class T>
+class tree{
+private:
+    btnode<T> *root;
+    int size;
+    btnode<T>* addItem(btnode<T>*, T);
+    int btSearch(btnode<T>*, T);
+    void display(btnode<T>*);
+public:
+    tree();
+    //~tree();
+    tree(btnode<T>*);
+    int getSize(){return size;}
+    void tInsert(T);
+    int btSearch(T);
+    //bool remove();
+    void display();
+};
+
+template <class T>
+btnode<T>::btnode(){
+    left = right = parent = NULL;
+}
+
+template <class T>
+btnode<T>::btnode(T in){
+    item = in;
+    left = right = parent = NULL;
+}
+
+template <class T>
+tree<T>::tree(){
+    root = NULL;
+    size = 0;
+}
+
+template <class T>
+void tree<T>::tInsert(T a){
+    root = addItem(root,a);
+}
+
+template <class T>
+btnode<T>* tree<T>::addItem(btnode<T>* a, T in){
+
+    if(a==NULL){
+        btnode<T>*  b = new btnode<T>();
+        b->parent = a;
+        b->item = in;
+		b->left = NULL;
+		b->right = NULL;
+        size++;
+        return b;
+	}
+	else if(a->item<in){
+        a->right = addItem(a->right,in);
+	}
+	else if(a->item>in){
+		a->left = addItem(a->left,in);
+	}
+
+	return a;
+}
+
+template <class T>
+void tree<T>::display(){
+    display(root);
+}
+
+template <class T>
+void tree<T>::display(btnode<T>* a){
+	if(a!=NULL){
+		display(a->left);
+        cout<<a->item<< " ";
+        display(a->right);
+	}
+}
+
+template <class T>
+int tree<T>::btSearch(T a){
+    return btSearch(root, a);
+}
+
+template <class T>
+int tree<T>::btSearch(btnode<T>* a,T in){
+    if(a==NULL)
+        return size;
+    else if(a->item==in){
+        return 1;
+	}
+	else if(a->item<in){
+        return 1 + btSearch(a->right,in);
+	}
+	else if(a->item>in){
+		return 1 + btSearch(a->left,in);
+	}
+    return 0;
+}
+/*
+template <class T>
+bool tree<T>::remove(){
+
+}*/
+
+int main(){
+    int n=0, in=0, sInt=0, t = 0, found=0;
+    cin>>t;
+    while(t>0){
+        tree<int> bTree;
+        cin>>n;
+        while(n>0){
+            cin>>in;
+            bTree.tInsert(in);
+            n--;
+        }
+        //bTree.display();
+        cin>>sInt;
+        found = bTree.btSearch(sInt);
+        if(found<=bTree.getSize()){
+            cout<< found << " FOUND"<<endl;
+        }
+        else{
+            cout<< found -bTree.getSize() << " !FOUND"<<endl;
+        }
+        t--;
+    }
+    return 0;
+}
