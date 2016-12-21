@@ -1,0 +1,12 @@
+MPA1 - Tee of En - May the for be with you (Section A)
+Input: A file that contains a syntactically correct c++/java for loop.
+
+Output: The simplified T ( n ) of the loop. For this submission, only the parsing is required. Expected outputs are the different tokens extracted from the loop. The output should include the following:
+
+the initializers in the loop
+the condition in the loop
+the processes or operations to be executed in the loop
+Name your file yourFamilyName1-1 (either .java or .c or .cpp).
+
+ 
+sample-test-cases.txt sample-test-cases.txt
