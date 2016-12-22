@@ -1,5 +1,5 @@
-# MPA3 (Be a Maze, Be Very Amazed)
-## General Description
+ MPA3 (Be a Maze, Be Very Amazed)
+ General Description
 Given a maze (composed of squares or cells that are either walls or open spaces) and the start (source) and end (destination) squares or cells, find a path solution from start (source) to end (destination).  If there is a solution, i.e. the destination is reachable from the source, display this solution, marking the cells along this path solution with an 'x'.  If there is no solution, display the original maze.
 
 The input to this machine problem assignment is a file named "maze.in". The first line of the input is a number representing the number of test cases or mazes to solve followed by the actual test cases.  Each test case is composed of the dimension of the maze and the maze itself.  The dimension of the maze is written in one line containing two integers delimited (separated) by a space. The first number represents the number of rows and the second, the number of the columns. This is followed by the actual maze in the next line. Below is a sample input file.
@@ -26,12 +26,12 @@ Once a path is found, the cells along this path should be marked with a lower ca
 #*#xxx#
 #######
 
-### Implementation Details
-#### cell or square  
+ Implementation Details
+ cell or square  
 square (or cell) should represent a square in a maze. It should at least have the following members. You may have all of them specified as public. What are the needed information for the constructor?
 
 type of a square (maybe a character or an enumeration)
-#### location (row, column)
+ location (row, column)
 visited (use this to make sure squares are visited at most once)
 constructor(parameter list?)
 #### maze
@@ -63,7 +63,7 @@ for(int i=0; i<n; i++)
     delete[] themaze[i];
 //finally, free themaze
 delete[] themaze; 
-#### agenda
+ agenda
 Two solutions must be provided for each test case, one using a queue, and the other, using a stack. There is a natural tendency to make two separate functions/methods to solve the maze, the first one with the use of a queue and the second with the use of a stack. But a close inspection of these two separate solutions will reveal that they are doing exactly the same processes except for the data structure used.  To avoid doing two separate solutions, create a "wrapper" class that will have similar operations as the stack and the queue. It will also hold a data member storing the type of adt used, i.e. either a queue or a stack. You may include an int or an enumeration that determine its type (stack or queue). Call it agenda. And should provide the following operations:
 
 add - a facility to add an item depending on the adt used
