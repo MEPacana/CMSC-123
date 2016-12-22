@@ -25,7 +25,7 @@ Both the addresses follow the IPv4 addresses. IPv4 addresses are 32-bit strings.
 ![alt tag](http://vle.upcebu.edu.ph/pluginfile.php/1765/mod_assign/intro/ip-address.png)
 ip address sample
 
-## Sequence Number
+### Sequence Number
 
 Since messages or data sent over the internet are broken down into a number of packets, there has to be a way for the recipient to know which packets belong to a particular data (datagram).  For our purpose, we will call this as a sequence number.  And it is 16 bits long.  This will be used for reconstruction. The sequence number indicates the ordering of the lines of the poem. A zero (0) sequence number means that the packet carries the title of the poem.  A packet that has a negative sequence number indicates that the packet is the "end-of-poem" packet. The absolute value of this number represents the total number of packets that belong to one poem. Say for instance a packet arrives with -10 as its sequence number, this means that there is a poem with 10 lines total, including the title.  This is going to be especially useful when there will be missing packets or missing lines from a certain poem. And for checking whether there are duplicate packets or lines received.
 
@@ -138,17 +138,17 @@ The data part should be converted to actual characters that will form the line f
 101011000110100101011001000101111011100101001011110100001001011100000000000000011011101000001101000000010011100001010011011001010110000101110011011011110110111000100000011011110110011000100000011011010110100101110011011101000111001100100000011000010110111001100100001000000110110101100101011011000110110001101111011101110010000001100110011100100111010101101001011101000110011001110101011011000110111001100101011100110111001100000000
 The last 8 bits are simply padded data. They do not represent any information. They are used to make sure that the size of the entire packet is divisible by 16. This is needed for the checksum algorithm described in an earlier section.
 
-# Implementation
+### Implementation
 
-# Representation
+### Representation
 
 In this assignment, a poem has been divided into packets.  A poem should be represented with a use of a list of packets.  The entire collection of poems should be represented as a list of list of packets (list < list<packets> >). You may use available c++ library in solving the problem.  The bitset is especially useful.
 
-# Input
+### Input
 
 The input to this MP Assignment is a file.  The file will contain a number of lines. Each of these lines represents a packet written in binary.  The lines are not necessarily arranged in the correct order they appear in a poem.
 
-# Output
+### Output
 
 The output is the reconstructed/reassembled poems.  This should be written in a file named "poems.in".  Write the title first. In the next line, write the source/destination pair followed by the lines from the poem. Since the input may contain more than one poem, write the poems in the order that they are found in the input file.  Since we use the source/destination addresses to identify the poems, take note of the instances a new source/destination pair is read in the file.
 
