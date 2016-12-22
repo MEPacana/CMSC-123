@@ -1,0 +1,35 @@
+template <class T>
+class agenda{
+private:
+    T *adt;
+    int type; //1 for stack, 2 for queue
+public:
+    agenda();
+    ~agenda(){delete adt;}
+    void add(square);
+    bool remove();
+    bool isempty();
+    int getsize();
+    square peek();
+};
+
+template <class T>
+agenda<T>::agenda(){
+    adt = new T();
+    string t1 = typeid(*adt).name();
+    string t2 = typeid(stack<square>).name();
+    string t3 = typeid(queue<square>).name();
+    //cout<<t1<<endl<<t2<<endl;
+    if(t1.compare(t2)==0)
+        type = 1;
+    else
+    if(t1.compare(t3)==0)
+        type = 2;
+}
+
+
+int main(){
+    agenda<stack<square> > a; //how to know what type of agenda is a?
+    agenda<queue<square> > b; //how to know what type of agenda is b?
+    return 0;
+}
