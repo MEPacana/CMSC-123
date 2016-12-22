@@ -1,5 +1,5 @@
 # MPA2 (i think i shall never see a poem as lovely as in binary form)
-# General Description (Read thoroughly until the Caveats Section):
+### General Description (Read thoroughly until the Caveats Section):
 When data is sent over the internet (movie, image, pdfs, emails, etc), it is sent as a series of packets - the data broken down into parts with a certain size. These packets contain information such as source address of the data, destination address, length of the data, the data itself, etc. An example of a packet (header information or the packet header) looks like the one below:
 ![alt tag](http://vle.upcebu.edu.ph/pluginfile.php/1765/mod_assign/intro/ip-header-2.png)
 
@@ -8,7 +8,7 @@ Check out http://www.thegeekstuff.com/2012/03/ip-protocol-header/ to read more o
 
 For this MP Assignment, you are to reconstruct packets "sent" into the actual message or data that is readable.  The packets are sent in binary format.
 
-# Packet Description
+### Packet Description
 Since this is a simple simulation, the packets in this MP Assignment will not contain all the information found in an actual packet. The data part of the packet will contain a line from a poem. This means that each packet represents a line from a poem. The title of the poem is represented with a packet.
 
 Below shows a sample of 3 packets:
@@ -19,21 +19,21 @@ Below shows a sample of 3 packets:
 The packets will contain the following fields:
 ![alt tag](http://vle.upcebu.edu.ph/pluginfile.php/1765/mod_assign/intro/fields_green.jpg)
 
-# Source and Destination Addresses
+### Source and Destination Addresses
 
 Both the addresses follow the IPv4 addresses. IPv4 addresses are 32-bit strings.  And they divided into 4 octets, separated by a dot. Each octet can take a value from 0 - 255 (since there 8 bits in each octet, the maximum value is 28 - 1, which 255). Some sample IP addresses that you may have encountered are of the form: 69.89.31.226 or 192.130.10.237.  This source/destination pair of addresses determines whether the packets belong to the same poem.  All packets with the same source/destination pair belong to one poem.
 ![alt tag](http://vle.upcebu.edu.ph/pluginfile.php/1765/mod_assign/intro/ip-address.png)
 ip address sample
 
-# Sequence Number
+## Sequence Number
 
 Since messages or data sent over the internet are broken down into a number of packets, there has to be a way for the recipient to know which packets belong to a particular data (datagram).  For our purpose, we will call this as a sequence number.  And it is 16 bits long.  This will be used for reconstruction. The sequence number indicates the ordering of the lines of the poem. A zero (0) sequence number means that the packet carries the title of the poem.  A packet that has a negative sequence number indicates that the packet is the "end-of-poem" packet. The absolute value of this number represents the total number of packets that belong to one poem. Say for instance a packet arrives with -10 as its sequence number, this means that there is a poem with 10 lines total, including the title.  This is going to be especially useful when there will be missing packets or missing lines from a certain poem. And for checking whether there are duplicate packets or lines received.
 
-# Checksum
+### Checksum
 
 When packets are sent or transmitted over the internet, it is possible for the packets to get corrupted. A 0 might have turned into a 1 or vice versa or even an entire chunk corrupted and not just a bit. In order for the recipient to determine such an error in the transmission, a checksum is used.  Before a packet is transmitted, a value called the checksum is computed based on this packet using some algorithm.  Once the packet reaches its destination, the receiver computes for the checksum using the same algorithm and based on the packet received.  If the computed checksum and sent checksum match, then no such error occurred. But if they do not match, then an error has occurred while the packet was in transit.
 
-# Checksum Algorithm for this MP Assignment
+### Checksum Algorithm for this MP Assignment
 
 Say we have the following packet:
 
@@ -102,15 +102,15 @@ To check whether there was an error in transmitting this packet, compare this co
 1101000010010111 - the computed checksum
 Since they match, the packet is not corrupted.  If they do not match, then the packet is corrupted.
 
-# Length of Data
+### Length of Data
 
 This information is 16 bits long. This represents how long the data part is in bits.  This is the reason why the size of the data part is variable. It is dependent on the field Length of Data.
 
-# Data
+### Data
 
 The data will be a line from a poem.  Each letter, punctuation or space of a line is converted and transmitted using its ASCII code written, of course, in binary. 
 
-# Padding
+### Padding
 
 Notice that there in computing for the checksum, the packet is divided into equal parts of 16 bits each.  Since the length of the data is variable, it is possible that the entire packet is not divisible by 16.  This means that the packet may or may not have a padding. In this assignment, the padding is simply a sequence of 0's.  The number of 0's is dependent on how many is needed to make the length of the entire packet divisible by 16. The padding is not part of the data.
 
